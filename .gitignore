@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+out/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# User Configuration (Safety)
+config.json
+.env

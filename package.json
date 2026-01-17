@@ -1,0 +1,41 @@
+{
+  "name": "scholardraft-simple",
+  "version": "1.0.0",
+  "description": "Academic Text Polisher - Simple Version",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-win": "electron-builder --win",
+    "build-mac": "electron-builder --mac"
+  },
+  "keywords": ["academic", "writing", "openai"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "pdfkit": "^0.15.0",
+    "docx": "^8.5.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.scholardraft.app",
+    "productName": "ScholarDraft",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "styles.css",
+      "prompts.json"
+    ],
+    "win": {
+      "target": ["nsis"]
+    },
+    "mac": {
+      "target": ["dmg"],
+      "category": "public.app-category.productivity"
+    }
+  }
+}

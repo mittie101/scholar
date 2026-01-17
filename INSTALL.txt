@@ -1,0 +1,78 @@
+INSTALLATION INSTRUCTIONS
+=========================
+
+IMPORTANT: After extracting the files, you MUST install dependencies!
+
+STEP 1: Open Terminal/Command Prompt
+-------------------------------------
+Windows: Right-click the scholardraft-simple folder → "Open in Terminal"
+Mac: Right-click the scholardraft-simple folder → "New Terminal at Folder"
+
+
+STEP 2: Install Dependencies
+-----------------------------
+Run this command:
+
+npm install
+
+This will install:
+- electron (desktop framework)
+- electron-builder (for creating .exe/.dmg)
+- pdfkit (for PDF export)
+- docx (for Word export)
+
+Wait for installation to complete (may take 2-3 minutes).
+
+
+STEP 3: Run the App
+-------------------
+npm start
+
+
+TROUBLESHOOTING
+===============
+
+"Cannot find module 'docx'" or "Cannot find module 'pdfkit'"
+→ You forgot to run: npm install
+
+"npm not found"
+→ Install Node.js from https://nodejs.org/
+
+"Permission errors" on Windows
+→ Run terminal as Administrator:
+  Right-click Command Prompt → "Run as administrator"
+  Then navigate to folder and run: npm install
+
+
+FEATURES THAT NEED DEPENDENCIES
+================================
+
+These features REQUIRE npm install:
+✓ Export to Word (.docx)
+✓ Export to PDF (.pdf)
+
+These work WITHOUT npm install:
+✓ Export to Text (.txt)
+✓ Export to JSON (.json)
+✓ All text polishing features
+
+
+QUICK CHECK
+===========
+
+After npm install, your node_modules folder should contain:
+- docx/
+- pdfkit/
+- electron/
+- and many other packages
+
+If you don't see these, npm install didn't work properly.
+
+
+NEED HELP?
+==========
+
+1. Make sure Node.js v18+ is installed
+2. Delete node_modules and package-lock.json
+3. Run: npm install
+4. Try again: npm start
