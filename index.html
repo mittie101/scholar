@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.openai.com;">
+    <title>ScholarDraft Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Toolbar -->
+        <header class="toolbar">
+            <div class="toolbar-left">
+                <div class="app-title">
+                    <span class="icon">📚</span>
+                    <span>ScholarDraft Pro</span>
+                </div>
+                <div class="api-status">
+                    <span class="status-dot" id="apiStatusDot"></span>
+                    <span id="apiStatusText">No API Key</span>
+                </div>
+            </div>
+            
+            <div class="toolbar-controls">
+                <select id="modeSelector" class="mode-select" title="Select field-specific mode">
+                    <option value="standard">Standard Academic</option>
+                </select>
+                
+                <select id="dialectSelector">
+                    <option value="US English">US English</option>
+                    <option value="UK English">UK English</option>
+                </select>
+                
+                <select id="modelSelector">
+                    <option value="gpt-4o">GPT-4o (Best)</option>
+                    <option value="gpt-4o-mini">GPT-4o-mini (Fast & Cheap)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                </select>
+                
+                <button id="settingsBtn" class="settings-btn" title="Settings">⚙️</button>
+            </div>
+        </header>
+        
+        <!-- Main Editor Area -->
+        <main class="editor-area">
+            <!-- Input Pane -->
+            <div class="pane input-pane">
+                <div class="pane-header">
+                    <span class="pane-title">📝 Your Draft</span>
+                    <div class="pane-actions">
+                        <button id="openFileBtn" title="Open File">📁</button>
+                        <button id="saveFileBtn" title="Save File">💾</button>
+                        <button id="clearInputBtn" title="Clear">🗑️</button>
+                    </div>
+                </div>
+                <textarea
+                    id="inputText"
+                    class="text-editor"
+                    placeholder="Paste your rough draft here...
+
+Example:
+The result of our experiments shows that the new method performs better. We got 95% accuracy which is good.
+
+Tips:
+• Citations like (Smith, 2023) will be preserved
+• All data and numbers stay unchanged
+• LaTeX equations protected automatically
+• Long documents (10,000+ words) are automatically chunked for best quality"></textarea>
+                <div class="pane-footer">
+                    <span id="inputWordCount">0 words</span>
+                    <span id="currentFileName" class="file-name"></span>
+                </div>
+            </div>
+            
+            <!-- Center Controls -->
+            <div class="center-controls">
+                <div class="polish-controls">
+                    <button id="polishBtn" class="btn-polish" disabled>
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-text">Polish Text</span>
+                    </button>
+                    
+                    <button id="acceptBtn" class="btn-accept" disabled>
+                        <span class="btn-icon">✓</span>
+                        <span class="btn-text">Accept Changes</span>
+                    </button>
+                </div>
+                
+                <div class="cost-display">
+                    <div class="cost-item">
+                        <span class="label">Estimated:</span>
+                        <span class="value" id="costEstimate">$0.0000</span>
+                    </div>
+                    <div class="cost-item" id="lastCostItem" style="display: none;">
+                        <span class="label">Last polish:</span>
+                        <span class="value success" id="lastCost">$0.0000</span>
+                    </div>
+                    <div class="cost-item" id="improvementItem" style="display: none;">
+                        <span class="label">Improved:</span>
+                        <span class="value success" id="improvementPercent">0%</span>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="showDiffCheck">
+                        <span>Show Changes (Track Changes Style)</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="latexProtectCheck" checked>
+                        <span>LaTeX Protection</span>
+                    </label>
+                </div>
+                
+                <div class="mode-description" id="modeDescription"></div>
+            </div>
+            
+            <!-- Output Pane -->
+            <div class="pane output-pane">
+                <div class="pane-header output-header">
+                    <span class="pane-title">✨ Polished Output (Real-time Streaming)</span>
+                    <div class="version-selector" id="versionSelector" style="display: none;">
+                        <label for="versionDropdown" style="font-size: 0.9em; margin-right: 8px;">Version:</label>
+                        <select id="versionDropdown" style="padding: 4px 8px; border-radius: 4px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text);">
+                            <option value="0">Current</option>
+                        </select>
+                    </div>
+                    <div class="pane-actions">
+                        <button id="copyOutputBtn" disabled title="Copy">📋</button>
+                        <div class="export-dropdown">
+                            <button id="exportMenuBtn" disabled class="export-menu-btn" title="Export">
+                                💾 ▼
+                            </button>
+                            <div id="exportMenu" class="export-menu">
+                                <button id="exportTxtBtn" class="export-option">📄 Text (.txt)</button>
+                                <button id="exportDocxBtn" class="export-option">📘 Word (.docx)</button>
+                                <button id="exportPdfBtn" class="export-option">📕 PDF (.pdf)</button>
+                                <button id="exportJsonBtn" class="export-option">📊 JSON (.json)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="outputText" class="text-output">
+                    <div class="placeholder">
+                        <h3>Polished text will appear here</h3>
+                        <p>Select a field-specific mode and click "Polish Text" to begin<br>
+                        ✓ Real-time streaming • ✓ Auto-save recovery • ✓ Smart chunking for long texts</p>
+                    </div>
+                </div>
+                <div class="pane-footer">
+                    <span id="outputWordCount">0 words</span>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Processing Indicator -->
+        <div id="processingIndicator" class="processing-indicator">
+            <div class="spinner"></div>
+            <span>Polishing text...</span>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button id="closeModalBtn" class="close-btn">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <section class="settings-section">
+                    <h3>🔑 OpenAI API Key</h3>
+                    <p class="help-text">
+                        Get your API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a><br>
+                        <small>🔒 Stored securely in OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service)</small>
+                    </p>
+                    <input
+                        type="password"
+                        id="apiKeyInput"
+                        placeholder="sk-..."
+                        class="api-key-input"
+                    />
+                    <div class="button-group">
+                        <button id="saveApiKeyBtn" class="btn-primary">Save Key</button>
+                        <button id="testApiKeyBtn" class="btn-secondary">Test Connection</button>
+                        <button id="deleteApiKeyBtn" class="btn-danger">Delete Key</button>
+                    </div>
+                </section>
+                
+                <section class="settings-section">
+                    <h3>📊 Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">Total Polishes</span>
+                            <span class="stat-value" id="totalPolishes">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Total Spent</span>
+                            <span class="stat-value" id="totalSpent">$0.000</span>
+                        </div>
+                    </div>
+                    <button id="resetStatsBtn" class="btn-secondary">Reset Statistics</button>
+                </section>
+                
+                <section class="settings-section">
+                    <h3>🎨 Appearance</h3>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span>Dark Mode</span>
+                    </label>
+                </section>
+                
+                <section class="settings-section">
+                    <h3>💾 Auto-Save</h3>
+                    <p class="help-text">
+                        Drafts are automatically saved every 30 seconds.<br>
+                        Recovery available on restart if connection fails.
+                    </p>
+                </section>
+                
+                <section class="settings-section">
+                    <h3>📖 Custom Dictionary</h3>
+                    <p class="help-text">
+                        Protect specific terms from being changed by AI.<br>
+                        Format: <code>original term → replacement</code> or just <code>term</code> to preserve as-is
+                    </p>
+                    <div id="dictionaryList" class="dictionary-list">
+                        <!-- Dictionary entries will appear here -->
+                    </div>
+                    <div class="dictionary-input-group">
+                        <input type="text" id="dictTermInput" class="dict-input" placeholder="Term to protect (e.g., 'tipo di struttura')">
+                        <input type="text" id="dictReplacementInput" class="dict-input" placeholder="Replacement (optional)">
+                        <button id="addDictBtn" class="btn-primary">Add Term</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Metadata Modal for PDF/DOCX Export -->
+    <div id="metadataModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📄 Document Information</h2>
+                <button id="closeMetadataBtn" class="close-btn">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <section class="settings-section">
+                    <p class="help-text">Add optional metadata to your document:</p>
+                    
+                    <label class="input-label">Title:</label>
+                    <input type="text" id="metaTitle" class="api-key-input" placeholder="e.g., Polished Academic Text">
+                    
+                    <label class="input-label">Author:</label>
+                    <input type="text" id="metaAuthor" class="api-key-input" placeholder="Your name">
+                    
+                    <label class="input-label">Subject:</label>
+                    <input type="text" id="metaSubject" class="api-key-input" placeholder="e.g., Medical Research">
+                    
+                    <div id="pdfFormattingOptions" style="display: none;">
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+                        <h4>📕 PDF Formatting Options</h4>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="doubleSpacingCheck">
+                            <span>Double Spacing (for peer review)</span>
+                        </label>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="lineNumbersCheck">
+                            <span>Line Numbers (critical for manuscript review)</span>
+                        </label>
+                        
+                        <label class="input-label">Font:</label>
+                        <select id="fontSelect" class="api-key-input">
+                            <option value="times">Times New Roman</option>
+                            <option value="arial">Arial</option>
+                            <option value="calibri">Calibri</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button id="confirmMetadataBtn" class="btn-primary">Export</button>
+                        <button id="cancelMetadataBtn" class="btn-secondary">Cancel</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-icon">✨</div>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle">Processing</div>
+            <div class="toast-message" id="toastMessage">Please wait...</div>
+        </div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    SCHOLARDRAFT PRO V2.0 - QUICK START                        ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+INSTALLATION
+============
+
+1. Install Dependencies
+   ---------------------
+   npm install
+
+   This will install:
+   - electron
+   - pdfkit
+   - docx  
+   - diff-match-patch (NEW!)
+
+
+2. Run the Application
+   -------------------
+   npm start
+
+
+3. First-Time Setup
+   ----------------
+   a) Click ⚙️ Settings button
+   b) Enter your OpenAI API key (get from platform.openai.com)
+   c) Click "Save Key" - it will be encrypted in your OS keychain
+   d) Click "Test Connection" to verify
+
+
+4. Build for Distribution (Optional)
+   ----------------------------------
+   Windows: npm run build-win
+   macOS:   npm run build-mac
+
+
+WHAT'S NEW IN V2.0
+==================
+
+✨ REAL STREAMING
+   - See text appear token-by-token as it's generated
+   - No more waiting with a progress bar
+   
+🔍 TRACK CHANGES STYLE DIFF
+   - Professional diff display
+   - Green additions, red deletions
+   - Powered by Google's diff-match-patch
+   
+📚 SMART CHUNKING  
+   - Handles 10,000+ word documents
+   - Automatic section detection
+   - Progress updates: "Section 2 of 5..."
+   
+🔒 SECURE API KEY STORAGE
+   - Stored in OS keychain (macOS/Windows/Linux)
+   - No more plain-text keys in config files
+   
+🎨 CUSTOM PROMPTS (Foundation Ready)
+   - Extensible prompt system
+   - Easy to add specialized modes
+   
+📕 ENHANCED PDF EXPORT
+   - Double spacing option
+   - Line numbering (for manuscripts)
+   - Font selection (Times/Arial/Calibri)
+   
+💾 AUTO-SAVE & RETRY
+   - Auto-saves every 30 seconds
+   - Automatic retry on network errors (up to 3x)
+   - Recovery prompt on restart
+
+
+QUICK FEATURE TEST
+==================
+
+Test Streaming:
+   1. Paste 500+ word text
+   2. Click "Polish Text"
+   3. Watch tokens appear in real-time
+
+Test Diff:
+   1. Polish any text
+   2. Enable "Show Changes"
+   3. See green/red highlighting
+
+Test Chunking:
+   1. Paste 5,000+ word document
+   2. Polish it
+   3. Watch "Section X of Y" progress
+
+Test Security:
+   1. Save API key in Settings
+   2. Check userData folder
+   3. See "secure_key.dat" (encrypted)
+   4. Verify "config.json" has NO API key
+
+Test PDF Export:
+   1. Polish any text
+   2. Click Export → PDF
+   3. Check "Double Spacing"
+   4. Check "Line Numbers"
+   5. Open PDF - verify formatting
+
+Test Auto-Save:
+   1. Type text
+   2. Wait 30 seconds
+   3. Force quit app
+   4. Restart - should offer recovery
+
+
+TROUBLESHOOTING
+===============
+
+Issue: "Cannot find module 'diff-match-patch'"
+Fix:   Run npm install
+
+Issue: Streaming not working
+Fix:   Check internet connection
+       Verify API key is valid
+       Try testing with shorter text first
+
+Issue: Auto-save not recovering
+Fix:   Check userData folder for draft_backup.json
+       Ensure you waited 30+ seconds before crash
+
+Issue: PDF formatting not applying
+Fix:   Make sure you check the formatting options
+       in the metadata modal before export
+
+
+DEVELOPMENT NOTES
+=================
+
+Project Structure:
+├── main.js          - Electron main process (secure storage)
+├── renderer.js      - UI logic (streaming, diff, chunking)
+├── preload.js       - IPC bridge
+├── index.html       - UI layout
+├── styles.css       - Styling
+└── prompts.json     - Prompt definitions
+
+Key Files for Customization:
+- prompts.json       - Add new modes
+- renderer.js        - Modify processing logic
+- main.js            - Add new file formats
+
+Security Files:
+- config.json        - Settings (NO API key)
+- secure_key.dat     - Encrypted API key (binary)
+
+
+SUPPORT
+=======
+
+For detailed implementation notes, see:
+   IMPROVEMENTS_IMPLEMENTED.txt
+
+All 7 critical improvements are documented there.
+
+
+ESTIMATED POLISH COSTS
+======================
+
+GPT-4o Mini (Recommended):
+   1,000 words: ~$0.003
+   5,000 words: ~$0.015
+   10,000 words: ~$0.030
+
+GPT-4o (Best Quality):
+   1,000 words: ~$0.015
+   5,000 words: ~$0.075
+   10,000 words: ~$0.150
+
+
+TIPS FOR BEST RESULTS
+======================
+
+1. Use GPT-4o Mini for initial drafts (fast & cheap)
+2. Use GPT-4o for final polish before submission
+3. Enable LaTeX Protection for equations
+4. Use field-specific modes (Medical, Engineering, etc.)
+5. Break very long docs (15K+ words) into chapters
+6. Export with line numbers for peer review
+7. Use double spacing for easier editing
+
+Enjoy ScholarDraft Pro V2.0! 🎓✨
